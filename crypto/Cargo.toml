@@ -1,0 +1,16 @@
+[package]
+name = "crypto"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "crypto"
+path = "src/lib.rs"
+#crate-type = ["lib"]
+
+[dependencies]
+logger = { path = "../logger" } # Logger imported from https://github.com/DuarteSerranoR/info_disco_of_awesomeness
+log = "0.4"
+
+# an option instead of webassembly https://medium.com/@a7ul/using-rust-modules-for-javascript-web-development-part-3-3-nodejs-7c71e4ae23fe
+# compile to c with -- crate-type = ["cdylib"] -- and import to nodejs with -- node-ffi --
