@@ -1,5 +1,7 @@
 
-use digest::{aead, Digest};
+// used rust-crypto = "0.2.35"
+use crypto::{aes::KeySize, blockmodes::NoPadding, buffer::{RefReadBuffer, RefWriteBuffer, BufferResult}, symmetriccipher::Encryptor};
+extern crate crypto;
 
 #[derive(Clone)]
 pub struct SymetricAES {
@@ -48,15 +50,8 @@ impl SymetricAES {
         let iv_vec: &[u8] = &self.clone().generate_iv_vec();
         let key_vec: Vec<u8> = self.clone().key.clone();
         let key: &[u8] = &key_vec;
-        //let padding: NoPadding = NoPadding;
+        let padding: NoPadding = NoPadding;
 
-        let mut hasher = Digest::new();
-        hasher.
-        hasher.input(password.as_str().as_bytes());
-        hasher.input(b"$");
-        hasher.input(salt.as_bytes());
-        output.copy_from_slice(hasher.finalize().as_slice());
-        /*
         let mut aes: Box<dyn Encryptor> = crypto::aes::cbc_encryptor(KeySize::KeySize256, key, iv_vec, padding);
 
         let out_buffer: &mut [u8] = &mut [];
@@ -65,7 +60,6 @@ impl SymetricAES {
 
         let result: Result<BufferResult, crypto::symmetriccipher::SymmetricCipherError> = aes.encrypt(password_reader, output, true);
         result.err();
-        */
 
         let s: &str = match std::str::from_utf8(out_buffer) {
             Ok(v) => v,

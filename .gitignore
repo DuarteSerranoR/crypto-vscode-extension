@@ -1,13 +1,18 @@
 # Rust
+Cargo.lock
+target
+
 # Crypto lib
-/crypto/target
-/crypto/Cargo.lock
+#/crypto/target
+#/crypto/Cargo.lock
 
 # Logger lib
-/logger/target
-/logger/Cargo.lock
+#/logger/target
+#/logger/Cargo.lock
 
 # NodeJS
+node_modules
+package-lock.json
 # Crypto extension
-/rusty-crypto/node_modules
-/rusty-crypto/package-lock.json
+#/rusty-crypto/node_modules
+#/rusty-crypto/package-lock.json

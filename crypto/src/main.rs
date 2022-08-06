@@ -4,10 +4,14 @@ use std::str::Bytes;
 use logger;
 use crate::logger::setup_logger;
 
+mod crypto;
+
 /////////////////////////////////////////////
 /// Binnary to run API tests
 /////////////////////////////////////////////
 fn main() {
+
+
     // Logger imported from https://github.com/DuarteSerranoR/info_disco_of_awesomeness
     // Setup the program logs
     setup_logger().expect("Failed to load logger!");
@@ -16,9 +20,11 @@ fn main() {
     let algorithm_name: &str = "";
     let input_token: &str = "";
     let salt: Bytes = "0".bytes();
+    let pepper: Bytes = "0".bytes();
 
     log::info!("Starting encryption");
-    let encrypted_token = "";
+    let aes: crypto::SymetricAES = crypto::SymetricAES::new(pepper, 10);
+    let encrypted_token = aes.encrypt("abcdefg".to_string(), "".to_string(), salt);
 
     log::info!("Starting token decryption");
     let output_token = "";

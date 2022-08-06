@@ -10,7 +10,24 @@ path = "src/lib.rs"
 
 [dependencies]
 logger = { path = "../logger" } # Logger imported from https://github.com/DuarteSerranoR/info_disco_of_awesomeness
-log = "0.4"
+log = "0.4.14"
+rand = "0.8.5"
 
+
+# Crypto libs:
+
+# article -> https://cure53.de/pentest-report_rust-libs_2022.pdf
+
+# From the RustCrypto team -> most used, all of them go around the digest lib
+digest = "0.10.3" # https://crates.io/crates/digest / https://github.com/RustCrypto/traits
+#crypto = "0.3.0" # https://crates.io/crates/crypto / https://github.com/RustCrypto
+#cipher = "0.4.3" # https://crates.io/crates/cipher / https://github.com/RustCrypto
+
+# Older lib -> really low level and found it good to use if it would had been better supported, but no-one uses it nowadays. Also, had problems compiling!!
+#rust-crypto = "0.2.36" # https://crates.io/crates/rust-crypto / https://github.com/DaGenix/rust-crypto/
+
+
+# Export of the lib to TypeScript:
 # an option instead of webassembly https://medium.com/@a7ul/using-rust-modules-for-javascript-web-development-part-3-3-nodejs-7c71e4ae23fe
 # compile to c with -- crate-type = ["cdylib"] -- and import to nodejs with -- node-ffi --
+
