@@ -1,5 +1,6 @@
 
-use digest::{aead, Digest};
+use digest::Digest;
+use aead::AeadCore;
 
 #[derive(Clone)]
 pub struct SymetricAES {
@@ -50,7 +51,7 @@ impl SymetricAES {
         let key: &[u8] = &key_vec;
         //let padding: NoPadding = NoPadding;
 
-        let mut hasher = Digest::new();
+        let mut hasher = AeadCore::new();
         hasher.
         hasher.input(password.as_str().as_bytes());
         hasher.input(b"$");

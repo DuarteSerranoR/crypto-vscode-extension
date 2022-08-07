@@ -19,9 +19,16 @@ rand = "0.8.5"
 # article -> https://cure53.de/pentest-report_rust-libs_2022.pdf
 
 # From the RustCrypto team -> most used, all of them go around the digest lib
+# RustCrypto GitHub group, which aims to implement cryptography in pure Rust
 digest = "0.10.3" # https://crates.io/crates/digest / https://github.com/RustCrypto/traits
+aead = "0.5.0" # https://github.com/RustCrypto/AEADs -> Authenticated Encryption with Associated Data
 #crypto = "0.3.0" # https://crates.io/crates/crypto / https://github.com/RustCrypto
 #cipher = "0.4.3" # https://crates.io/crates/cipher / https://github.com/RustCrypto
+
+# xsalsa20poly1305 = "0.8.0" https://github.com/RustCrypto/AEADs/tree/master/xsalsa20poly1305
+# crypto_box - "0.7.1"
+
+# digest -> This is the main lib which contains all the work done by the RustCrypto team !!!!
 
 # Older lib -> really low level and found it good to use if it would had been better supported, but no-one uses it nowadays. Also, had problems compiling!!
 #rust-crypto = "0.2.36" # https://crates.io/crates/rust-crypto / https://github.com/DaGenix/rust-crypto/
