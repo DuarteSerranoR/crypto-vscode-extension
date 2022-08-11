@@ -13,6 +13,7 @@ target
 # NodeJS
 node_modules
 package-lock.json
+dist
 out
 # Crypto extension
 #/rusty-crypto/node_modules

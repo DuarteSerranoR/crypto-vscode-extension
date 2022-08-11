@@ -14,10 +14,34 @@
     "onCommand:rusty-crypto.decrypt",
     "onCommand:rusty-crypto.test",
     "onCommand:rusty-crypto.show_panel",
-    "onCommand:rusty-crypto.refresh"
+    "onCommand:rusty-crypto.refresh",
+    
+    "onCommand:rusty-crypto.setKey",
+
+    "onView:rusty-crypto-sidebar"
   ],
   "main": "./dist/extension.js",
   "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "rusty-crypto-sidebar-view",
+          "title": "RustyCrypto",
+          "icon": "media/ico.svg"
+        }
+      ]
+    },
+    "views": {
+      "rusty-crypto-sidebar-view": [
+        {
+          "type": "webview",
+          "id": "rusty-crypto-sidebar",
+          "name": "RustyCrypto",
+          "icon": "media/ico.svg",
+          "contextualTitle": "RustyCrypto"
+        }
+      ]
+    },
     "menus": {
       "editor/context": [
         {
@@ -59,6 +83,11 @@
         "command": "rusty-crypto.refresh",
         "title": "Refresh command",
         "category": "rusty-crypto"
+      },
+      {
+        "command": "rusty-crypto.setKey",
+        "title": "Set Key",
+        "category": "rusty-crypto"
       }
     ],
     "configuration": {
@@ -66,7 +95,7 @@
       "properties": {
         "cryptoSettings.key": {
           "type": "string",
-          "default": "starting key",
+          "default": "initial_key",
           "description": ""
         },
         "cryptoSettings.algoritm": {

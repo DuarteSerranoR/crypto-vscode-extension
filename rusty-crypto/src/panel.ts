@@ -4,8 +4,14 @@ import {
         Uri,
         Disposable,
         ViewColumn,
-        Webview
+        Webview,
+        workspace,
+        commands
     } from "vscode";
+
+import { setKey } from "./extension";
+
+import { getNonce } from "./getNonce";
 
 // Taken from oficial example:
 // https://github.com/microsoft/vscode-extension-samples/tree/main/webview-view-sample
@@ -16,7 +22,7 @@ export class RustyCryptoPanel {
 
     public static readonly viewType = "rusty-crypto";
 
-    private readonly _panel: WebviewPanel;
+    public _panel: WebviewPanel;
     private readonly _extensionUri: Uri;
     private _disposables: Disposable[] = [];
 
@@ -108,6 +114,11 @@ export class RustyCryptoPanel {
         this._panel.webview.html = this._getHtmlForWebview(webview);
         webview.onDidReceiveMessage(async (data) => {
             switch (data.type) {
+                case "setKey": {
+                    setKey(data.value);
+                    commands.executeCommand("rusty-crypto.pushKey");
+                    break;
+                }
                 case "onInfo": {
                     if (!data.value) {
                         return;
@@ -148,7 +159,7 @@ export class RustyCryptoPanel {
         const scriptMainPath = Uri.joinPath(
             this._extensionUri,
             "dist/compiled",
-            "App.js"
+            "Panel.js"
         );
 
         // Uri to load styles into webview
@@ -173,6 +184,9 @@ export class RustyCryptoPanel {
 				<link href="${stylesResetUri}" rel="stylesheet">
 				<link href="${stylesVSUri}" rel="stylesheet">
 				<link href="${stylesMainUri}" rel="stylesheet">
+                <script nonce="${nonce}">
+                    const tsvscode = acquireVsCodeApi();
+                </script>
 				
 				<title>Rusty-Crypto</title>
 			</head>
@@ -180,13 +194,4 @@ export class RustyCryptoPanel {
             <script src="${scriptMainUri}" nonce="${nonce}"/>
 			</html>`;
     }
-}
-
-function getNonce() {
-    let text = '';
-    const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    for (let i = 0; i < 32; i++) {
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
-    }
-    return text;
 }

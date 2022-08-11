@@ -4,6 +4,7 @@ import * as cryptoTS from "crypto-ts";
 // } from 'crypto-ts'; // https://www.npmjs.com/package/crypto-ts
 
 
+
 class Crypto {
 
 
@@ -17,6 +18,7 @@ class Crypto {
     }
 
     public setKey(key: string) {
+
         this.tsCrypto.key = key;
         this.rustCrypto.key = key;
     }
@@ -56,7 +58,7 @@ export enum CryptoTypes {
 
 class CryptoBase {
     public algorithm: string = "AES"; // TODO - create enum and append all types of algorithms, also, implement the algorithms in each corresponding method. WARNING - some only can be reproduced in rust!
-    private _key = "asfdsafsdfdsf";
+    private _key = "initial_key";
 
     public get key(): string {
         return this._key;
@@ -76,7 +78,7 @@ class TSCrypto extends CryptoBase { // https://github.com/hmoog/crypto-ts
 
     public decrypt(message: string) {
         let cipherText: cryptoTS.ɵe = cryptoTS.AES.decrypt(message, this.key);
-        return cipherText.toString();
+        return cipherText.toString(cryptoTS.enc.Utf8);
     }
 }
 
@@ -91,4 +93,6 @@ class RustCrypto extends CryptoBase {
     }
 }
 
-export { Crypto };
+
+export var crypto: Crypto = new Crypto();
+

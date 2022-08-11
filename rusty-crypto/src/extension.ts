@@ -4,10 +4,7 @@ import {
 	commands,
 	window,
 	Disposable,
-	ExtensionContext,
-	WebviewPanel,
-	WebviewOptions,
-	Uri
+	ExtensionContext
   } from "vscode";
 
   
@@ -16,11 +13,18 @@ import * as open from "open";
 
 import { Crypto } from "./crypto";
 import { RustyCryptoPanel } from "./panel";
+import { SidebarProvider } from "./sidebar-provider";
 
 
 
+var crypto = new Crypto();
 
-export var crypto = new Crypto();
+
+var key: string;
+export function setKey(_key: string) {
+	key = _key;
+}
+
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -44,13 +48,22 @@ export function activate(context: ExtensionContext) {
 	*/
 
 
+	// Side Bar
+  	const sidebarProvider = new SidebarProvider(context.extensionUri);
+
 	console.log("Extension active!");
 
 	// https://code.visualstudio.com/docs/getstarted/userinterface
 	// https://code.visualstudio.com/api/references/contribution-points
-	let disposables: Disposable[] = [
 
-		// TODO - add side bar
+	// https://microsoft.github.io/vscode-codicons/dist/codicon.html
+	// https://github.com/microsoft/vscode-codicons
+
+	// https://github.com/microsoft/vscode-extension-samples/tree/main/webview-view-sample
+
+	// https://github.com/RustCrypto/AEADs
+
+	let disposables: Disposable[] = [
 
 		// Encryption commands
 		commands.registerCommand('rusty-crypto.encrypt', async () => {
@@ -85,7 +98,15 @@ export function activate(context: ExtensionContext) {
 		commands.registerCommand('rusty-crypto.decrypt', async () => {
 
 			const editor = window.activeTextEditor;
-			let selectedText = editor?.document.getText(editor.selection);
+
+			//if (!editor) {
+			//	window.showInformationMessage("No active text editor!");
+			//	return;
+			//}
+
+			//let selectedText: string | undefined = editor.document.getText(editor.selection);
+
+			let selectedText: string | undefined = editor?.document.getText(editor.selection);
 
 			if (selectedText !== undefined && selectedText !== '') {
 
@@ -110,6 +131,32 @@ export function activate(context: ExtensionContext) {
 
 		}),
 
+
+
+		// NOTE - everytime it comes here, the state at the "key" object needs to be current with the value you want to update, so, 
+		//		  first update the key value and then run this to push it to all crypto objects!
+		commands.registerCommand('rusty-crypto.pushKey', async () => {
+
+			crypto.setKey(key);
+
+			sidebarProvider._view?.webview.postMessage({
+				command: "setKey",
+				value: key
+			});
+
+			RustyCryptoPanel.currentPanel?._panel.webview.postMessage({
+				command: "setKey",
+				value: key
+			});
+
+			window.showInformationMessage(key);
+
+		}),
+
+		// TODO - config not updating on main page
+		// TODO - get key on both panel and webview, to update crypto object everytime it gets disposed and recreated!!
+		// TODO - snippet?
+
 		// Test command
 		commands.registerCommand('rusty-crypto.test', async () => {
 			const response = await window.showInformationMessage('Working?', "yes", "no");
@@ -130,6 +177,9 @@ export function activate(context: ExtensionContext) {
 			RustyCryptoPanel.createOrShow(context.extensionUri);
 		}),
 
+		// Side Bar
+		window.registerWebviewViewProvider("rusty-crypto-sidebar", sidebarProvider),
+
 		// Dev
 		commands.registerCommand("rusty-crypto.refresh", async () => {
 			RustyCryptoPanel.kill();
@@ -142,28 +192,6 @@ export function activate(context: ExtensionContext) {
 	disposables.forEach(disposable => {
 		context.subscriptions.push(disposable);
 	});
-
-	if (window.registerWebviewPanelSerializer) {
-		// Make sure we register a serializer in activation event
-		window.registerWebviewPanelSerializer(RustyCryptoPanel.viewType, {
-			async deserializeWebviewPanel(webviewPanel: WebviewPanel, state: any) {
-				console.log(`Got state: ${state}`);
-				// Reset the webview options so we use latest uri for `localResourceRoots`.
-				webviewPanel.webview.options = getWebviewOptions(context.extensionUri);
-				//CatCodingPanel.revive(webviewPanel, context.extensionUri);
-			}
-		});
-	}
-}
-
-function getWebviewOptions(extensionUri: Uri): WebviewOptions {
-	return {
-		// Enable javascript in the webview
-		enableScripts: true,
-
-		// And restrict the webview to only loading content from our extension's `media` directory.
-		localResourceRoots: [Uri.joinPath(extensionUri, 'media')]
-	};
 }
 
 // this method is called when your extension is deactivated

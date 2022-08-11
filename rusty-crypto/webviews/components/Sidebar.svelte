@@ -1,8 +1,30 @@
 <script lang="ts">
     
-    import { Crypto } from "../crypto";
+    import { crypto } from "../crypto";
 
-    var crypto: Crypto = new Crypto();
+
+    
+    import { onMount } from "svelte";
+
+    onMount(() => {
+        // Handle messages sent from the extension to the webview
+        window.addEventListener('message', event => {
+
+            const message = event.data; // The json data that the extension sent
+
+            switch (message.command) {
+
+                case 'setKey': {
+                    crypto.setKey(message.value);
+                    break;
+                }
+
+            }
+            
+        });
+    });
+
+
 
     enum Page {
         Main = 0,
@@ -54,7 +76,7 @@
     }
 
     function setKey() {
-        crypto.setKey(key);
+        tsvscode.postMessage({type: "setKey", value: key});
     }
 
 
@@ -71,23 +93,23 @@
     <br />
 
     <h3>Encrypt: </h3>
-    <input bind:value={encryptTxt} style="border: 2px solid gray; width:40vw;" />
-    <button style="width:40vw;" on:click="{encrypt}">Submit</button>
+    <input bind:value={encryptTxt} style="border: 2px solid gray; width:85vw;" />
+    <button style="width:85vw;" on:click="{encrypt}">Submit</button>
 
     <h4>Output: </h4>
     <h4 id="encryptedOutput">{encryptOutput}</h4>
-    <button style="width:40vw;" on:click="{copyEncrypted}">Copy</button>
+    <button style="width:85vw;" on:click="{copyEncrypted}">Copy</button>
 
     <br />
     <br />
 
     <h3>Decrypt: </h3>
-    <input bind:value={decryptTxt} style="border: 2px solid gray; width:40vw;" />
-    <button style="width:40vw;" on:click="{decrypt}">Submit</button>
+    <input bind:value={decryptTxt} style="border: 2px solid gray; width:85vw;" />
+    <button style="width:85vw;" on:click="{decrypt}">Submit</button>
     
     <h4>Output: </h4>
     <h4 id="decryptedOutput">{decryptOutput}</h4>
-    <button style="width:40vw;" on:click="{copyDecrypted}">Copy</button>
+    <button style="width:85vw;" on:click="{copyDecrypted}">Copy</button>
 
     <br />
     <br />
@@ -105,8 +127,8 @@
     <br />
 
     <h3>Set Key: </h3>
-    <input value={key} style="border: 2px solid gray; width:40vw;" />
-    <button style="width:40vw;" on:click="{setKey}">Submit</button>
+    <input bind:value={key} style="border: 2px solid gray; width:85vw;" />
+    <button style="width:85vw;" on:click="{setKey}">Submit</button>
 
     <br />
     <br />

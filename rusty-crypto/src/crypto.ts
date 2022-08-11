@@ -19,8 +19,10 @@ class Crypto {
     }
 
     public setKey(key: string) {
-        this.tsCrypto.key = key;
-        this.rustCrypto.key = key;
+        //this.tsCrypto.key = key;
+        //this.rustCrypto.key = key;
+        vscode.workspace.getConfiguration("cryptoSettings").update("key", key, true);
+        let __key = vscode.workspace.getConfiguration("cryptoSettings").get("key");
     }
 
     public encrypt(message: string): string {
@@ -62,9 +64,9 @@ class CryptoBase {
     public get key(): string {
         return vscode.workspace.getConfiguration("cryptoSettings").get("key")!;
     }
-    public set key(key: string) {
-        vscode.workspace.getConfiguration("cryptoSettings").update("key", key);
-    }
+    //public set key(key: string) {
+    //    vscode.workspace.getConfiguration("cryptoSettings").update("key", key);
+    //}
 }
 
 
@@ -75,9 +77,9 @@ class TSCrypto extends CryptoBase { // https://github.com/hmoog/crypto-ts
         return bytes.toString();
     }
 
-    public decrypt(message: string) {
+    public decrypt(message: string): string {
         let cipherText: cryptoTS.ɵe = cryptoTS.AES.decrypt(message, this.key);
-        return cipherText.toString();
+        return cipherText.toString(cryptoTS.enc.Utf8);
     }
 }
 
