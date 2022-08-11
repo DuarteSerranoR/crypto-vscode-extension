@@ -3,8 +3,6 @@ import * as cryptoTS from "crypto-ts";
 //    AES
 // } from 'crypto-ts'; // https://www.npmjs.com/package/crypto-ts
 
-import * as vscode from "vscode";
-
 
 class Crypto {
 
@@ -58,12 +56,13 @@ export enum CryptoTypes {
 
 class CryptoBase {
     public algorithm: string = "AES"; // TODO - create enum and append all types of algorithms, also, implement the algorithms in each corresponding method. WARNING - some only can be reproduced in rust!
+    private _key = "asfdsafsdfdsf";
 
     public get key(): string {
-        return vscode.workspace.getConfiguration("cryptoSettings").get("key")!;
+        return this._key;
     }
     public set key(key: string) {
-        vscode.workspace.getConfiguration("cryptoSettings").update("key", key);
+        this._key = key;
     }
 }
 

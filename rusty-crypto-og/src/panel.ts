@@ -44,7 +44,7 @@ export class RustyCryptoPanel {
                 // And restrict the webview to only loading content from our extension's `media` directory.
                 localResourceRoots: [
                     Uri.joinPath(extensionUri, "media"),
-                    Uri.joinPath(extensionUri, "dist/compiled")
+                    Uri.joinPath(extensionUri, "out/compiled")
                 ]
             }
         );
@@ -147,8 +147,8 @@ export class RustyCryptoPanel {
         );
         const scriptMainPath = Uri.joinPath(
             this._extensionUri,
-            "dist/compiled",
-            "App.js"
+            "out/compiled",
+            "Main.js"
         );
 
         // Uri to load styles into webview

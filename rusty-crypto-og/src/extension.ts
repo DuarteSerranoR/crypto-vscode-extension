@@ -4,21 +4,15 @@ import {
 	commands,
 	window,
 	Disposable,
-	ExtensionContext,
-	WebviewPanel,
-	WebviewOptions,
-	Uri
+	ExtensionContext
   } from "vscode";
 
-  
+import * as Main from "./webviews/pages/Main";
+
 import * as open from "open";
-
-
-import { Crypto } from "./crypto";
 import { RustyCryptoPanel } from "./panel";
 
-
-
+import Crypto from "./crypto";
 
 export var crypto = new Crypto();
 
@@ -142,28 +136,6 @@ export function activate(context: ExtensionContext) {
 	disposables.forEach(disposable => {
 		context.subscriptions.push(disposable);
 	});
-
-	if (window.registerWebviewPanelSerializer) {
-		// Make sure we register a serializer in activation event
-		window.registerWebviewPanelSerializer(RustyCryptoPanel.viewType, {
-			async deserializeWebviewPanel(webviewPanel: WebviewPanel, state: any) {
-				console.log(`Got state: ${state}`);
-				// Reset the webview options so we use latest uri for `localResourceRoots`.
-				webviewPanel.webview.options = getWebviewOptions(context.extensionUri);
-				//CatCodingPanel.revive(webviewPanel, context.extensionUri);
-			}
-		});
-	}
-}
-
-function getWebviewOptions(extensionUri: Uri): WebviewOptions {
-	return {
-		// Enable javascript in the webview
-		enableScripts: true,
-
-		// And restrict the webview to only loading content from our extension's `media` directory.
-		localResourceRoots: [Uri.joinPath(extensionUri, 'media')]
-	};
 }
 
 // this method is called when your extension is deactivated
