@@ -1,15 +1,17 @@
 
-use digest::Digest;
-use aead::AeadCore;
+/*
+use aead::{self, generic_array::{GenericArray, ArrayLength}, Payload, KeyInit, AeadInPlace, Nonce};
+use aes_gcm::{Aes256Gcm, aes::Aes256, AesGcm};
 
-#[derive(Clone)]
-pub struct SymetricAES {
-    pepper_seed: Vec<u8>,
-    num_iterations: u32, // Rfc2898 derivation iterations
-    key: Vec<u8>,
-    //key_size: KeySize,
-    pub salt_length: u32,
-    pub iv_len: usize
+#[derive(Debug)]
+pub struct AesGcmr {
+    cypher: AesGcm<Aes256, NonceSize>, // 12 = NonceSize
+    nonce: Vec<u8>,
+    //aad: &'static [u8],
+    //tag: &'static [u8; 16],
+
+    //
+    iv_len: usize
 }
 
 //impl Copy for SymetricAES {
@@ -18,16 +20,20 @@ pub struct SymetricAES {
 //    }
 //}
 
-impl SymetricAES {
-    /// Creates a new [`SymetricAES`].
-    pub fn new(pepper: Vec<u8>, iterations: u32) -> Self {
-        let key_len = 10;
+impl AesGcmr {
+    /// Creates a new [`AES-GCMR`] encryption object (typeof AesGcmr).
+    pub fn new() -> Self {
+        let key_len: usize = 10; // TODO 
+        let nounce_len: usize = 12; // TODO 
+
+        let key_bytes: Vec<u8> = (0..key_len.clone()).map(|_| { rand::random::<u8>() }).collect();
+        let key = GenericArray::from_slice(&key_bytes);
         Self {
-            num_iterations: iterations,
-            pepper_seed: pepper, // The pepper is per application, but as of now, it is configurable
-            key: (0..key_len.clone()).map(|_| { rand::random::<u8>() }).collect(),
+            //key: Aes256Gcm::generate_key(&mut OsRng),
+            cypher: Aes256Gcm::new(&key),
+            nonce: (0..nounce_len.clone()).map(|_| { rand::random::<u8>() }).collect(),
+
             //key_size: 32, // 32 bytes - unique per secret, generated from the string key
-            salt_length: 16, // 16 bytes - unique per secret, stored with secret. Concatenated with papper yields 32 bytes.
             iv_len: 16 // 16 bytes for the random initialization vector - cannot be changed, depends on AES
         }
     }
@@ -43,8 +49,18 @@ impl SymetricAES {
     /// # Panics
     ///
     /// Panics if .
-    pub fn encrypt(self, password: String, message: String, salt: Vec<u8>) -> String {
+    pub fn encrypt(self, message: String) -> String {
+        let nonce = GenericArray::from_slice(&self.nonce);
+        
+        let mut message_buffer: Vec<u8> = Vec::new();
+        message_buffer.extend_from_slice(message.as_bytes());
 
+        let cipher = Aes256Gcm::new(&key);
+        cipher.encrypt_in_place(nonce, b"", &mut message_buffer);
+        
+        return message_buffer.
+
+        /*
         // If type == AES
         let iv_vec: &[u8] = &self.clone().generate_iv_vec();
         let key_vec: Vec<u8> = self.clone().key.clone();
@@ -73,6 +89,7 @@ impl SymetricAES {
             Err(e) => panic!("Invalid UTF-8 sequence: {}", e),
         };
         return s.to_string();//"".to_string();
+        */
     }
 
     
@@ -81,3 +98,4 @@ impl SymetricAES {
         return "".to_string();
     }
 }
+*/
