@@ -4,6 +4,9 @@ import * as cryptoTS from "crypto-ts";
 // } from 'crypto-ts'; // https://www.npmjs.com/package/crypto-ts
 
 
+//import * as wasm from "../pkg/crypto";
+
+
 
 class Crypto {
 
@@ -85,11 +88,12 @@ class TSCrypto extends CryptoBase { // https://github.com/hmoog/crypto-ts
 class RustCrypto extends CryptoBase {
 
     public encrypt(message: string) {
-        return ""; // TODO 
+        //return wasm.rust_encrypt(message);
+        return "";
     }
 
     public decrypt(message: string) {
-        return ""; // TODO 
+        return "";
     }
 }
 

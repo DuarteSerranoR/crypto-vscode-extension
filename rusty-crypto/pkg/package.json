@@ -1,0 +1,11 @@
+{
+  "name": "crypto",
+  "version": "0.1.0",
+  "files": [
+    "crypto.d.ts"
+  ],
+  "main": "crypto.js",
+  "module": "crypto.js",
+  "types": "crypto.d.ts",
+  "sideEffects": false
+}
